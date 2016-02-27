@@ -18,51 +18,53 @@ if(isset($_GET['set'])){
 	option::set('dl_backup_day' , $_POST['day']);
 	option::set('dl_backup_cxbf' , $_POST['cxbf']);
 	ReDirect(SYSTEM_URL.'index.php?mod=admin:setplug&plug=dl_backup&ok');
-	}
+}
 if(isset($_GET['update'])){
-	global $m;
 	if(!empty($email)){
+		global $m;
 		$e = $m->query('SHOW TABLES');
-		$aaa = 'Tables_in_'.DB_NAME;
-		$dump  = '<pre>#Warning: Do not change the comments!!!'  . "\n";
-		$dump .= '#Tieba-Cloud-Sign Database Backup' . "\n";
-		$dump .= '#Version:' . SYSTEM_VER . "\n";
-		$dump .= '#Date:' . date('Y-m-d H:m:s') . "\n";
-		$dump .= '############## Start ##############' . "\n";
+		$dump  = '/*' . PHP_EOL;
+		$dump .= 'Warning: Do not change the comments!!!'  . PHP_EOL . PHP_EOL;
+		$dump .= 'Tieba-Cloud-Sign Database Backup' . PHP_EOL;
+		$dump .= 'Tieba-Cloud-Sign Version : ' . SYSTEM_VER . PHP_EOL;
+		$dump .= 'Tieba-Cloud-Sign Name : ' . SYSTEM_NAME . PHP_EOL;
+		$dump .= 'MySQL Server Version : ' . $m->getMysqlVersion() . PHP_EOL;
+		$dump .= 'Date: ' . date('Y-m-d H:i:s') . PHP_EOL;
+		$dump .= '*/' . PHP_EOL . PHP_EOL;
+		$dump .= '-------------- Start --------------' . PHP_EOL . PHP_EOL;
+		$dump .= 'SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";' . PHP_EOL;
+		$dump .= 'SET FOREIGN_KEY_CHECKS=0;' . PHP_EOL;
+		$dump .= 'SET time_zone = "+8:00";' . PHP_EOL . PHP_EOL;
 		while ($v = $m->fetch_array($e)) {
 			$list  = $v;
 			foreach ($list as $table) {
 				$dump .= dataBak($table);
 			}
 		}
-		$dump .= "\n" . '############## End ##############</pre>';
+		$dump .= PHP_EOL . '-------------- End --------------';
 		$title = SYSTEM_NAME . " " . date('Y-m-d') . " 数据库备份";
-		$x = misc::mail($email,$title,$dump);
+		$x = misc::mail($email,$title,"备份文件已附上，请查看附件",array('backup-'.date('Ymd').'.sql' => $dump));
 		if($x != true){
-			option::set('dl_backup_log',date('Y-m-d H:m:s').'  数据库备份邮件发送失败！');
-		    ReDirect(SYSTEM_URL.'index.php?mod=admin:setplug&plug=dl_backup&wrong');}
-			else {
-			option::set('dl_backup_log',date('Y-m-d H:m:s').'  数据库备份邮件发送成功！');
+			option::set('dl_backup_log',date('Y-m-d H:i:s').'  数据库备份邮件发送失败！');
+		    ReDirect(SYSTEM_URL.'index.php?mod=admin:setplug&plug=dl_backup&wrong');
+		} else {
+			option::set('dl_backup_log',date('Y-m-d H:i:s').'  数据库备份邮件发送成功！');
 			ReDirect(SYSTEM_URL.'index.php?mod=admin:setplug&plug=dl_backup&success');
-			}
 		}
 	}
-
+}
 ?>
-<h3>自动数据库备份设置</h3>
-</br>
+<h3>自动数据库备份设置</h3><br/>
 <form action="index.php?mod=admin:setplug&plug=dl_backup&set" method="post">
-<div class="input-group">
-  <span class="input-group-addon">接收备份邮箱</span>
-  <input type="email" name="email" class="form-control" value="<?php echo option::get('dl_backup_email') ?>">
-</div><br>
-<div class="input-group">
-  <span class="input-group-addon">备份间隔（天）</span>
-  <input type="number" name="day" class="form-control" value="<?php echo option::get('dl_backup_day') ?>">
-</div></br>
-<div class="input-group">
-</div></br></br>
-<p><b>最新日志：<?php echo option::get('dl_backup_log'); ?></b></p></br>
-<p>注：请将计划任务顺序设置为0，以防止计划任务卡住导致没有备份！使用立即备份功能请确保已经设置了接收邮箱并保存！</p></br>
-  <button type="submit" class="btn btn-success">保存设置</button>&nbsp;<button type="button" onclick="window.location = 'index.php?mod=admin:setplug&plug=dl_backup&update';" class="btn btn-danger">立即备份</button>
+	<div class="input-group">
+		<span class="input-group-addon">接收备份邮箱</span>
+		<input type="email" name="email" class="form-control" value="<?php echo option::get('dl_backup_email') ?>" required/>
+	</div><br/>
+	<div class="input-group">
+		<span class="input-group-addon">备份间隔（天）</span>
+		<input type="number" name="day" class="form-control" value="<?php echo option::get('dl_backup_day') ?>" min="1" max="365" required/>
+	</div><br/><br/><br/>
+	<p><b>最新日志：<?php echo option::get('dl_backup_log'); ?></b></p></br>
+	<p>注：请将计划任务顺序设置为0，以防止计划任务卡住导致没有备份！使用立即备份功能请确保已经设置了接收邮箱并保存！</p><br/>
+	<button type="submit" class="btn btn-success">保存设置</button>&nbsp;<button type="button" onClick="window.location = 'index.php?mod=admin:setplug&plug=dl_backup&update';" class="btn btn-danger">立即备份</button>
 </form>
