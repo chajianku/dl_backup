@@ -8,7 +8,7 @@ $day = (int)option::get('dl_backup_day');
 $email = option::get('dl_backup_email');
 $hour = option::get('dl_backup_hour');
 $status = false;
-if (!empty($hour) && $hour <= date('H') && $hour > 0 && $hour < 24) {
+if (!empty($hour) && $hour <= date('H') && $hour >= 0 && $hour < 24) {
 	$status = true;
 }
 if($c >= $day && !empty($day) && !empty($email) && $status){
