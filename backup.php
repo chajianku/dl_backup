@@ -42,13 +42,13 @@ if($c >= $day && !empty($day) && !empty($email) && $status){
 		option::set('dl_backup_log',date('Y-m-d H:i:s').'  数据库备份邮件发送成功！');
 	}	
 } else {
-    if ($c < $day && !empty($day) && !empty($email) && !empty($hour) && $hour > date('H') && $hour > 0 && $hour < 24) {
+    if ($c < $day && !empty($day) && !empty($email) && !empty($hour) && $hour > 0 && $hour < 24) {
+        option::set('dl_backup_log',date('Y-m-d H:i:s') . '  设置正确！上次备份日期：' . $lastdo);	
+    } else {
 	if ($lastdo == "1970-01-01"){
 		option::set('dl_backup_log',date('Y-m-d H:i:s') . '  插件安装后还未执行过！');
 	} else {
-        	option::set('dl_backup_log',date('Y-m-d H:i:s') . '  设置正确！上次备份日期：' . $lastdo);	
+        	option::set('dl_backup_log',date('Y-m-d H:i:s') . '  设置不正确，无法进行备份并且发送邮件！');
 	}
-    } else {
-        option::set('dl_backup_log',date('Y-m-d H:i:s') . '  设置不正确，无法进行备份并且发送邮件！');
     }
 }
