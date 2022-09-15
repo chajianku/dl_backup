@@ -6,7 +6,12 @@ $d2=strtotime($lastdo);
 $c=(int)round(($d1-$d2)/3600/24);
 $day = (int)option::get('dl_backup_day');
 $email = option::get('dl_backup_email');
-if($c >= $day && !empty($day) && !empty($email)){
+$hour = option::get('dl_backup_hour');
+$status = false;
+if (!empty($hour) && $hour > date('H') && $hour > 0 && $hour < 24) {
+	$status = true;
+}
+if($c >= $day && !empty($day) && !empty($email) && $status){
 	global $m;
 	$e = $m->query('SHOW TABLES');
 	$dump  = '/*' . PHP_EOL;
