@@ -2,7 +2,7 @@
 return array(
 	'plugin' => array(
 		'name'        => '数据库自动备份',
-		'version'     => '1.2',
+		'version'     => '1.3',
 		'description' => '自动备份数据库发送到邮箱',
 		'onsale'      =>  false,
 		'url'         => 'http://www.tbsign.cn',
