@@ -16,7 +16,7 @@ if(isset($_GET['set'])){
 	global $m;
 	option::set('dl_backup_email' , $_POST['email']);
 	option::set('dl_backup_day' , $_POST['day']);
-	option::set('dl_backup_cxbf' , $_POST['cxbf']);
+	option::set('dl_backup_hour' , $_POST['hour']);
 	ReDirect(SYSTEM_URL.'index.php?mod=admin:setplug&plug=dl_backup&ok');
 }
 if(isset($_GET['update'])){
