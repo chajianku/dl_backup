@@ -5,7 +5,7 @@ function callback_init() {
 	$hour = option::get('dl_backup_hour');
 	if(empty($day)){option::set('dl_backup_day',1);}
 	if(empty($email)){option::set('dl_backup_email',EMAIL);}
-	if(empty($hour)){option::set('dl_backup_hour',8);}
+	if(empty($hour)){option::set('dl_backup_hour',10);}
 	cron::set('dl_backup','plugins/dl_backup/backup.php',0,0,0);
 }
 
