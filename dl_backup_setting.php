@@ -63,7 +63,12 @@ if(isset($_GET['update'])){
 	<div class="input-group">
 		<span class="input-group-addon">备份间隔（天）</span>
 		<input type="number" name="day" class="form-control" value="<?php echo option::get('dl_backup_day') ?>" min="1" max="365" required/>
-	</div><br/><br/><br/>
+	</div><br/>
+	<div class="input-group">
+		<span class="input-group-addon">每日备份时间(0-23时)</span>
+		<input type="number" name="hour" class="form-control" value="<?php echo option::get('dl_backup_hour') ?>" min="0" max="23" required/>
+	</div><br/>
+	<br/><br/>
 	<p><b>最新日志：<?php echo option::get('dl_backup_log'); ?></b></p></br>
 	<p>注：请将计划任务顺序设置为0，以防止计划任务卡住导致没有备份！使用立即备份功能请确保已经设置了接收邮箱并保存！</p><br/>
 	<button type="submit" class="btn btn-success">保存设置</button>&nbsp;<button type="button" onClick="window.location = 'index.php?mod=admin:setplug&plug=dl_backup&update';" class="btn btn-danger">立即备份</button>
